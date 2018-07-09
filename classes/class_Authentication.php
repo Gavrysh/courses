@@ -2,24 +2,54 @@
 
 class Authentication
 {
-    public function isAuth()
+    //проверка на то, авторизован ли пользователь на сайте
+    public static function isAuth()
     {
-        return true;
+        static $status = true;
+
+        if (!isset($_COOKIE['PHPSESSID'])) {
+            session_start();
+            print_r($_SERVER);
+            exit;
+            $_SESSION['user']['id'] = $_SERVER['HTTP_COOKIE'];
+            $_SESSION['user']['addr'] = $_SERVER['REMOTE_ADDR'];
+            $_SESSION['user']['client'] = $_SERVER['HTTP_USER_AGENT'];
+        } else {
+            $status = false;
+        }
+        return $status;
     }
 
-    public function auth($name)
+    //авторизация
+    public static function auth($login, $password)
     {
-        return true;
+        if (self::getLogin($login, $password)) {
+            self::isAuth();
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public function getLogin()
+    //возврат имени пользователя
+    public static function getLogin($login, $password)
     {
-        //Запрос на користувача з БД MySQL
-        return true;
+        $users = [
+            'serj' => '123456'
+        ];
+
+        if (array_key_exists($login, $users)) {
+            return true;
+        } else {
+            return false;
+        }
     }
-    public function logout()
+
+    //выход
+    public static function logout()
     {
-        session_destroy();
+        setcookie('PHPSESSID', '', time() -3600);
         session_unset();
+        session_destroy();
     }
 }
