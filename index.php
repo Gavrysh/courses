@@ -1,4 +1,15 @@
 <?php
+require_once './classes/class_Authentication.php';
+
+$btnLogoutEnable = false;
+
+if (isset($_POST['submitLogin'])) {
+    if(Authentication::auth($_POST['login'])) {
+        $btnLogoutEnable = true;
+    }
+} else {
+    Authentication::logout();
+}
 ?>
 
 <!DOCTYPE html>
@@ -10,7 +21,7 @@
     </head>
     <body>
         <div class="container">
-            <form>
+            <form action="<?=$_SERVER['SCRIPT_NAME']?>" method="post">
                 <div class="form-group">
                     <label for="login">Логін</label>
                     <input type="text" class="form-control" id="login" placeholder="Введіть логін">
@@ -24,7 +35,13 @@
                     <input type="checkbox" class="form-check-input" id="rememberMe">
                     <label class="form-check-label" for="rememberMe">Запам'ятати мене</label>
                 </div>
-                <button type="submit" class="btn btn-primary">Вхід</button>
+                <?php
+                if (!$btnLogoutEnable) {
+                    echo '<button type="submit" class="btn btn-primary" name="submitLogin">Вхід</button>';
+                } else {
+                    echo '<button type="submit" class="btn btn-primary" name="submitLogout">Вихід</button>';
+                }
+                ?>
             </form>
         </div>
     </body>
