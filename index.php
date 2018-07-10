@@ -53,9 +53,6 @@ if  (isset($_POST['submitLogout'])) {
                 }
                 ?>
             </form>
-            <?php
-            echo '<pre>'; if (isset($_SESSION)) { print_r($_SESSION); } echo '</pre>';
-            ?>
         </div>
     </body>
 </html>
